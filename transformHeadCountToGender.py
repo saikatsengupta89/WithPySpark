@@ -64,3 +64,13 @@ cls_schema = types.StructType([
 ])
 transformed_data = spark.createDataFrame(clean_list, schema=cls_schema)
 transformed_data.show()
+transformed_data.registerTempTable("cls_data")
+
+dataset_revert= spark.sql ("select "+
+                           "class, "+
+                           "sum(case when gender='m' then 1 else 0 end) male_cnt, "+
+                           "sum(case when gender='f' then 1 else 0 end) female_cnt "+
+                           "from cls_data "+
+                           "group by class "+
+                           "order by 1")
+dataset_revert.show()
